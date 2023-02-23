@@ -1,0 +1,80 @@
+1.jsonwebtoken
+
+=> Generate JWT_TOKEN
+
+JWT_SECRET ="Ravi@@1231234567890fghjkl"
+JWT_EXPIRE = 5d
+
+userSchema.methods.getJWTToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
+
+=>to Verify JWT TOKen 
+
+ const decodedData = jwt.verify(token,process.env.JWT_SECRET);
+ // console.log(decodedData) { id: '639d90f20c416e407c14dc15', iat: 1671275658, exp: 1671707658 }  
+ await User.findById(decodedData.id)
+
+
+
+2.bcryptjs 
+
+=>TO HASH A PASSWORD :-
+await bcrypt.hash(this.password,10);
+
+=>TO compare a password 
+return bcrypt.compare(enteredPassword, this.password); = T/F
+
+3.nodemailer
+4.validator
+validate : validator.isEmail
+
+5.cookie-parser
+
+include app.use(cookieParser()) in app.js
+
+=>Creating token and saving in cookie
+
+COOKIE_EXPIRE = 5
+
+const sendToken = (user, statusCode, res) => {
+  const token = user.getJWTToken();
+
+  //options for cookie
+  const options = {
+    expires: new Date(
+      Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000 //in miliseconds
+    ),
+    httpOnly: true, // The cookie only accessible by the web server
+  };
+  return res.status(statusCode).cookie("token", token, options).json({
+    success: true,
+    user,
+    token,
+  });
+};
+
+=> to get cookie
+ const token = req.cookies
+
+6.body-parser
+
+
+
+7.crypto = built-in module
+
+//Generating Password Reset Token
+userSchema.methods.getResetPasswordToken = function () {
+  //Generating Token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  //Hashing anf add to UserSchema
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  return resetToken;
+};

@@ -1,0 +1,50 @@
+1.while connecting mongodb use :
+
+useNewUrlParser: true,
+useCreateIndex: true,
+useUnifiedTopology:true
+
+example : 
+mongoose.connect("mongodb://localhost:27017/database",{
+useNewUrlParser: true,
+useCreateIndex: true,
+useUnifiedTopology:true
+})
+
+2.While updating a document in a collection use 
+
+->{new:true} = to get updated document
+->{runValidators : true}
+->{useFindAndModify : false}
+
+example:
+
+const updated_document = await Model.findByIdAndUpdate(
+req.params.id,
+req.body,
+{
+new:true,
+runValidators : true,
+useFindAndModify : false,
+})
+
+
+3.whenver we use async functions while making controllers we have to use try and catch
+
+4. to check if password field has been modified or not.
+
+UserSchema.pre('save', function(next) {
+    if (this.isModified('password')) // If the pw has been modified, then encrypt it again
+    this.password = this.encryptPassword(this.password);
+
+    next();
+});
+
+
+5.How to protect the password field in Mongoose/MongoDB so it won't return in a query
+
+You can change the default behavior at the schema definition level using the select attribute of the field:
+password: { type: String, select: false }
+
+Then you can pull it in as needed in find and populate calls via field selection as '+password'. For example:
+Users.findOne({_id: id}).select('+password').exec(...); 

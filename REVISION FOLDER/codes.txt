@@ -1,0 +1,9 @@
+400 - bad request
+401 - Unauthorized = Invalid email and password
+403 -a client is forbidden from accessing a valid URL. 
+The server understands the request, but it can't fulfill the request because of client-side issues.
+404 - Not found
+500 - Internal Server error
+201 - resource created
+200 - successful response
+
